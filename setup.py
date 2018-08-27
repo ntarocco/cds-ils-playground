@@ -91,6 +91,13 @@ setup(
         'invenio_i18n.translations': [
             'messages = ilsplayground',
         ],
+        'invenio_jsonschemas.schemas': [
+            'ils = ilsplayground.schemas'
+        ],
+        'invenio_search.mappings': [
+            'documents = ilsplayground.mappings',
+            'items = ilsplayground.mappings'
+        ],
     },
     extras_require=extras_require,
     install_requires=install_requires,
