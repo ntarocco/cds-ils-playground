@@ -18,6 +18,10 @@ from __future__ import absolute_import, print_function
 from datetime import timedelta
 
 
+from invenio_search.api import RecordsSearch
+from invenio_indexer.api import RecordIndexer
+
+
 def _(x):
     """Identity function used to trigger string extraction."""
     return x
@@ -146,3 +150,91 @@ OAISERVER_ID_PREFIX = 'oai:ilsplayground.com:'
 
 #: Switches off incept of redirects by Flask-DebugToolbar.
 DEBUG_TB_INTERCEPT_REDIRECTS = False
+
+
+# PID
+# ===
+_DOCUMENT_PID_TYPE = 'docid'
+_ITEM_PID_TYPE = 'itemid'
+
+# RECORDS REST
+# ============
+RECORDS_REST_ENDPOINTS = dict(
+    docid=dict(
+        pid_type=_DOCUMENT_PID_TYPE,
+        pid_minter='document_pid_minter',
+        pid_fetcher='document_pid_fetcher',
+        search_class=RecordsSearch,
+        indexer_class=RecordIndexer,
+        search_index=None,
+        search_type=None,
+        record_serializers={
+            'application/json': ('invenio_records_rest.serializers'
+                                 ':json_v1_response'),
+        },
+        search_serializers={
+            'application/json': ('invenio_records_rest.serializers'
+                                 ':json_v1_search'),
+        },
+        list_route='/documents/',
+        item_route='/documents/<pid(docid):pid_value>',
+        default_media_type='application/json',
+        max_result_window=10000,
+        error_handlers=dict(),
+    ),
+    itemid=dict(
+        pid_type=_ITEM_PID_TYPE,
+        pid_minter='item_pid_minter',
+        pid_fetcher='item_pid_fetcher',
+        search_class=RecordsSearch,
+        indexer_class=RecordIndexer,
+        search_index=None,
+        search_type=None,
+        record_serializers={
+            'application/json': ('invenio_records_rest.serializers'
+                                 ':json_v1_response'),
+        },
+        search_serializers={
+            'application/json': ('invenio_records_rest.serializers'
+                                 ':json_v1_search'),
+        },
+        list_route='/items/',
+        item_route='/items/<pid(itemid):pid_value>',
+        default_media_type='application/json',
+        max_result_window=10000,
+        error_handlers=dict(),
+    ),
+)
+
+# RECORDS UI
+# ==========
+RECORDS_UI_ENDPOINTS = {
+    "docid": {
+        "pid_type": _DOCUMENT_PID_TYPE,
+        "route": "/documents/<pid_value>",
+        "template": "invenio_records_ui/detail.html",
+    },
+    "docid_export": {
+        "pid_type": _DOCUMENT_PID_TYPE,
+        "route": "/documents/<pid_value>/export/<format>",
+        "view_imp": "invenio_records_ui.views.export",
+        "template": "invenio_records_ui/export.html",
+    },
+    "itemid": {
+        "pid_type": _ITEM_PID_TYPE,
+        "route": "/items/<pid_value>",
+        "template": "invenio_records_ui/detail.html",
+    },
+    "itemid_export": {
+        "pid_type": _ITEM_PID_TYPE,
+        "route": "/items/<pid_value>/export/<format>",
+        "view_imp": "invenio_records_ui.views.export",
+        "template": "invenio_records_ui/export.html",
+    }
+}
+
+# SEARCH UI
+# =========
+SEARCH_UI_SEARCH_API = '/api/documents/'
+
+SEARCH_UI_SEARCH_INDEX = 'documents'

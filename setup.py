@@ -98,6 +98,14 @@ setup(
             'documents = ilsplayground.mappings',
             'items = ilsplayground.mappings'
         ],
+        'invenio_pidstore.fetchers': [
+            'document_pid_fetcher = ilsplayground.pid.fetchers:document_pid_fetcher',
+            'item_pid_fetcher = ilsplayground.pid.fetchers:item_pid_fetcher'
+        ],
+        'invenio_pidstore.minters': [
+            'document_pid_minter = ilsplayground.pid.minters:document_pid_minter',
+            'item_pid_minter = ilsplayground.pid.minters:item_pid_minter'
+        ],
     },
     extras_require=extras_require,
     install_requires=install_requires,
