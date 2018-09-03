@@ -17,9 +17,14 @@ from __future__ import absolute_import, print_function
 
 from datetime import timedelta
 
+from invenio_circulation.config import CIRCULATION_POLICIES
 
-from invenio_search.api import RecordsSearch
-from invenio_indexer.api import RecordIndexer
+from ilsplayground.api import BookRecord, ItemRecord, LocationRecord
+from ilsplayground.search import BookRecordSearch, ItemRecordSearch, LocationRecordSearch
+from ilsplayground.circulation.utils import circulation_items_retriver, \
+    circulation_document_retriver, circulation_patron_exists, \
+    circulation_item_exists, circulation_item_location_retriever, \
+    circulation_is_item_available
 
 
 def _(x):
@@ -118,7 +123,7 @@ SQLALCHEMY_DATABASE_URI = \
 # JSONSchemas
 # ===========
 #: Hostname used in URLs for local JSONSchemas.
-JSONSCHEMAS_HOST = 'ilsplayground.com'
+JSONSCHEMAS_HOST = 'localhost:5000'
 
 # Flask configuration
 # ===================
@@ -154,20 +159,19 @@ DEBUG_TB_INTERCEPT_REDIRECTS = False
 
 # PID
 # ===
-_DOCUMENT_PID_TYPE = 'docid'
+_BOOK_PID_TYPE = 'bookid'
 _ITEM_PID_TYPE = 'itemid'
+_LOCATION_PID_TYPE = 'locid'
 
 # RECORDS REST
 # ============
 RECORDS_REST_ENDPOINTS = dict(
-    docid=dict(
-        pid_type=_DOCUMENT_PID_TYPE,
-        pid_minter='document_pid_minter',
-        pid_fetcher='document_pid_fetcher',
-        search_class=RecordsSearch,
-        indexer_class=RecordIndexer,
-        search_index=None,
-        search_type=None,
+    bookid=dict(
+        pid_type=_BOOK_PID_TYPE,
+        pid_minter='book_pid_minter',
+        pid_fetcher='book_pid_fetcher',
+        search_class=BookRecordSearch,
+        record_class=BookRecord,
         record_serializers={
             'application/json': ('invenio_records_rest.serializers'
                                  ':json_v1_response'),
@@ -176,8 +180,8 @@ RECORDS_REST_ENDPOINTS = dict(
             'application/json': ('invenio_records_rest.serializers'
                                  ':json_v1_search'),
         },
-        list_route='/documents/',
-        item_route='/documents/<pid(docid):pid_value>',
+        list_route='/books/',
+        item_route='/books/<pid(bookid):pid_value>',
         default_media_type='application/json',
         max_result_window=10000,
         error_handlers=dict(),
@@ -186,10 +190,8 @@ RECORDS_REST_ENDPOINTS = dict(
         pid_type=_ITEM_PID_TYPE,
         pid_minter='item_pid_minter',
         pid_fetcher='item_pid_fetcher',
-        search_class=RecordsSearch,
-        indexer_class=RecordIndexer,
-        search_index=None,
-        search_type=None,
+        search_class=ItemRecordSearch,
+        record_class=ItemRecord,
         record_serializers={
             'application/json': ('invenio_records_rest.serializers'
                                  ':json_v1_response'),
@@ -204,19 +206,39 @@ RECORDS_REST_ENDPOINTS = dict(
         max_result_window=10000,
         error_handlers=dict(),
     ),
+    locid=dict(
+        pid_type=_LOCATION_PID_TYPE,
+        pid_minter='location_pid_minter',
+        pid_fetcher='location_pid_fetcher',
+        search_class=LocationRecordSearch,
+        record_class=LocationRecord,
+        record_serializers={
+            'application/json': ('invenio_records_rest.serializers'
+                                 ':json_v1_response'),
+        },
+        search_serializers={
+            'application/json': ('invenio_records_rest.serializers'
+                                 ':json_v1_search'),
+        },
+        list_route='/locations/',
+        item_route='/locations/<pid(locid):pid_value>',
+        default_media_type='application/json',
+        max_result_window=10000,
+        error_handlers=dict(),
+    ),
 )
 
 # RECORDS UI
 # ==========
 RECORDS_UI_ENDPOINTS = {
-    "docid": {
-        "pid_type": _DOCUMENT_PID_TYPE,
-        "route": "/documents/<pid_value>",
+    "bookid": {
+        "pid_type": _BOOK_PID_TYPE,
+        "route": "/books/<pid_value>",
         "template": "invenio_records_ui/detail.html",
     },
-    "docid_export": {
-        "pid_type": _DOCUMENT_PID_TYPE,
-        "route": "/documents/<pid_value>/export/<format>",
+    "bookid_export": {
+        "pid_type": _BOOK_PID_TYPE,
+        "route": "/books/<pid_value>/export/<format>",
         "view_imp": "invenio_records_ui.views.export",
         "template": "invenio_records_ui/export.html",
     },
@@ -230,11 +252,32 @@ RECORDS_UI_ENDPOINTS = {
         "route": "/items/<pid_value>/export/<format>",
         "view_imp": "invenio_records_ui.views.export",
         "template": "invenio_records_ui/export.html",
+    },
+    "locid": {
+        "pid_type": _LOCATION_PID_TYPE,
+        "route": "/locations/<pid_value>",
+        "template": "invenio_records_ui/detail.html",
+    },
+    "locid_export": {
+        "pid_type": _LOCATION_PID_TYPE,
+        "route": "/locations/<pid_value>/export/<format>",
+        "view_imp": "invenio_records_ui.views.export",
+        "template": "invenio_records_ui/export.html",
     }
 }
 
 # SEARCH UI
 # =========
-SEARCH_UI_SEARCH_API = '/api/documents/'
+SEARCH_UI_SEARCH_API = '/api/books/'
 
-SEARCH_UI_SEARCH_INDEX = 'documents'
+SEARCH_UI_SEARCH_INDEX = 'books'
+
+
+# CIRCULATION
+# ===========
+CIRCULATION_ITEMS_RETRIEVER_FROM_DOCUMENT = circulation_items_retriver
+CIRCULATION_BOOK_RETRIEVER_FROM_ITEM = circulation_document_retriver
+CIRCULATION_PATRON_EXISTS = circulation_patron_exists
+CIRCULATION_ITEM_EXISTS = circulation_item_exists
+CIRCULATION_ITEM_LOCATION_RETRIEVER = circulation_item_location_retriever
+CIRCULATION_POLICIES['checkout']['item_available'] = circulation_is_item_available

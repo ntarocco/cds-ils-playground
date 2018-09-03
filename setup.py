@@ -82,6 +82,9 @@ setup(
         'console_scripts': [
             'ilsplayground = invenio_app.cli:cli',
         ],
+        'flask.commands': [
+            'ils = ilsplayground.cli:ils',
+        ],
         'invenio_base.blueprints': [
             'ilsplayground = ilsplayground.views:blueprint',
         ],
@@ -92,19 +95,22 @@ setup(
             'messages = ilsplayground',
         ],
         'invenio_jsonschemas.schemas': [
-            'ils = ilsplayground.schemas'
+            'ils = ilsplayground.jsonschemas'
         ],
         'invenio_search.mappings': [
-            'documents = ilsplayground.mappings',
-            'items = ilsplayground.mappings'
+            'books = ilsplayground.mappings',
+            'items = ilsplayground.mappings',
+            'locations = ilsplayground.mappings'
         ],
         'invenio_pidstore.fetchers': [
-            'document_pid_fetcher = ilsplayground.pid.fetchers:document_pid_fetcher',
-            'item_pid_fetcher = ilsplayground.pid.fetchers:item_pid_fetcher'
+            'book_pid_fetcher = ilsplayground.pid.fetchers:book_pid_fetcher',
+            'item_pid_fetcher = ilsplayground.pid.fetchers:item_pid_fetcher',
+            'location_pid_fetcher = ilsplayground.pid.fetchers:location_pid_fetcher',
         ],
         'invenio_pidstore.minters': [
-            'document_pid_minter = ilsplayground.pid.minters:document_pid_minter',
-            'item_pid_minter = ilsplayground.pid.minters:item_pid_minter'
+            'book_pid_minter = ilsplayground.pid.minters:book_pid_minter',
+            'item_pid_minter = ilsplayground.pid.minters:item_pid_minter',
+            'location_pid_minter = ilsplayground.pid.minters:location_pid_minter'
         ],
     },
     extras_require=extras_require,

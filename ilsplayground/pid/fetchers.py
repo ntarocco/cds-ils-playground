@@ -10,16 +10,17 @@
 
 from invenio_pidstore.fetchers import FetchedPID
 
-from ..config import _DOCUMENT_PID_TYPE, _ITEM_PID_TYPE
+from ..config import _BOOK_PID_TYPE, _ITEM_PID_TYPE, _LOCATION_PID_TYPE
 
 
-def document_pid_fetcher(record_uuid, data):
+def book_pid_fetcher(record_uuid, data):
     """."""
     return FetchedPID(
         provider=None,
-        pid_type=_DOCUMENT_PID_TYPE,
-        pid_value=str(data[_DOCUMENT_PID_TYPE])
+        pid_type=_BOOK_PID_TYPE,
+        pid_value=str(data[_BOOK_PID_TYPE])
     )
+
 
 def item_pid_fetcher(record_uuid, data):
     """."""
@@ -27,4 +28,13 @@ def item_pid_fetcher(record_uuid, data):
         provider=None,
         pid_type=_ITEM_PID_TYPE,
         pid_value=str(data[_ITEM_PID_TYPE])
+    )
+
+
+def location_pid_fetcher(record_uuid, data):
+    """."""
+    return FetchedPID(
+        provider=None,
+        pid_type=_LOCATION_PID_TYPE,
+        pid_value=str(data[_LOCATION_PID_TYPE])
     )
