@@ -1,0 +1,35 @@
+{
+  "mappings": {
+    "book-v1.0.0": {
+      "date_detection": false,
+      "numeric_detection": false,
+      "properties": {
+        "$schema": {
+          "type": "keyword"
+        },
+        "title": {
+          "type": "keyword"
+        },
+        "authors": {
+          "type": "keyword"
+        },
+        "description": {
+          "type": "keyword"
+        },
+        "items": {
+          "properties": {
+            "$ref": {
+              "type": "keyword"
+            }
+          }
+        },
+        "_created": {
+          "type": "date"
+        },
+        "_updated": {
+          "type": "date"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "http://localhost/schemas/locations/location-v1.0.0.json",
+  "title": "Location",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": ""
+    },
+    "address": {
+      "type": "string",
+      "description": ""
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "http://localhost/schemas/items/item-v1.0.0.json",
+  "title": "Item",
+  "type": "object",
+  "properties": {
+    "book": {
+      "type": "object",
+        "properties": {
+          "$ref": {
+            "type": "string"
+          }
+        }
+    },
+    "title": {
+      "type": "string",
+      "description": ""
+    },
+    "location": {
+      "type": "object",
+        "properties": {
+          "$ref": {
+            "type": "string"
+          }
+        }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "http://localhost/schemas/books/book-v1.0.0.json",
+  "title": "Book",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": ""
+    },
+    "authors": {
+      "type": "string",
+      "description": ""
+    },
+    "description": {
+      "type": "string",
+      "description": ""
+    },
+    "items": {
+      "items": {
+        "type": "object",
+        "properties": {
+          "$ref": {
+            "type": "string"
+          }
+        }
+      },
+      "type": "array"
+    }
+  }
+}

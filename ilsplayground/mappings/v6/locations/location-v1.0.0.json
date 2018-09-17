@@ -1,0 +1,25 @@
+{
+  "mappings": {
+    "location-v1.0.0": {
+      "date_detection": false,
+      "numeric_detection": false,
+      "properties": {
+        "$schema": {
+          "type": "keyword"
+        },
+        "name": {
+          "type": "keyword"
+        },
+        "address": {
+          "type": "keyword"
+        },
+        "_created": {
+          "type": "date"
+        },
+        "_updated": {
+          "type": "date"
+        }
+      }
+    }
+  }
+}
